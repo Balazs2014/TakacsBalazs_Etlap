@@ -2,9 +2,7 @@ package hu.csepel.etlap;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.SQLException;
@@ -42,7 +40,6 @@ public class EtlapController {
 
     @FXML
     public void onTorlesClick(ActionEvent actionEvent) {
-
     }
 
     @FXML
