@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<GridPane prefHeight="532.0" prefWidth="415.0" vgap="10.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.csepel.etlap.EtlapController">
+<GridPane prefHeight="532.0" prefWidth="415.0" vgap="10.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.csepel.etlap.EtlapController">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
    </columnConstraints>
@@ -73,7 +73,7 @@
       <TableView fx:id="etlapTableView" prefHeight="209.0" prefWidth="333.0" GridPane.rowIndex="2">
         <columns>
           <TableColumn fx:id="nevCol" prefWidth="151.0" text="Név" />
-          <TableColumn fx:id="ketegoriaCol" prefWidth="111.0" text="Kategória" />
+          <TableColumn fx:id="kategoriaCol" prefWidth="111.0" text="Kategória" />
             <TableColumn fx:id="arCol" prefWidth="75.0" text="Ár (Ft)" />
         </columns>
          <columnResizePolicy>

@@ -2,30 +2,47 @@ package hu.csepel.etlap;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class EtlapController {
 
     @FXML
-    private TableView<Etel> etlapTableView;
+    private TableView<Etlap> etlapTableView;
     @FXML
-    private TableColumn<Etel, String> ketegoriaCol;
+    private TableColumn<Etlap, String> kategoriaCol;
     @FXML
-    private TableColumn<Etel, Integer> arCol;
+    private TableColumn<Etlap, Integer> arCol;
     @FXML
-    private TableColumn<Etel, String> nevCol;
+    private TableColumn<Etlap, String> nevCol;
     @FXML
     private TextArea elemLeirasaTextArea;
 
-    public void initialize() {
+    private EtlapDb db;
 
+    public void initialize() {
+        nevCol.setCellValueFactory(new PropertyValueFactory<>("nev"));
+        kategoriaCol.setCellValueFactory(new PropertyValueFactory<>("kategoria"));
+        arCol.setCellValueFactory(new PropertyValueFactory<>("ar"));
+        try {
+            db = new EtlapDb();
+            List<Etlap> etlapLista = db.getEtlap();
+            for (Etlap etlap : etlapLista) {
+                etlapTableView.getItems().add(etlap);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     public void onTorlesClick(ActionEvent actionEvent) {
+
     }
 
     @FXML
