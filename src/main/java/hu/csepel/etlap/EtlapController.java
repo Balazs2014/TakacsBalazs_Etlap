@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.w3c.dom.events.MouseEvent;
+import javafx.scene.input.MouseEvent;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -37,9 +37,9 @@ public class EtlapController extends Controller {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+
     }
-
-
 
     @FXML
     public void onTorlesClick(ActionEvent actionEvent) {
@@ -87,5 +87,11 @@ public class EtlapController extends Controller {
 
     @FXML
     public void onEmelesSzazalekClick(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void onEtelClick(MouseEvent event) {
+        Etlap kiirandoLeiras = etlapTableView.getSelectionModel().getSelectedItem();
+        elemLeirasaTextArea.setText(kiirandoLeiras.getLeairas());
     }
 }

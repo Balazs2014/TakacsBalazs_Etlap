@@ -69,7 +69,7 @@
             </GridPane>
          </content>
       </TitledPane>
-      <TableView fx:id="etlapTableView" prefHeight="209.0" prefWidth="333.0" GridPane.rowIndex="2">
+      <TableView fx:id="etlapTableView" onMouseClicked="#onEtelClick" prefHeight="209.0" prefWidth="333.0" GridPane.rowIndex="2">
         <columns>
           <TableColumn fx:id="nevCol" prefWidth="151.0" text="Név" />
           <TableColumn fx:id="kategoriaCol" prefWidth="111.0" text="Kategória" />
