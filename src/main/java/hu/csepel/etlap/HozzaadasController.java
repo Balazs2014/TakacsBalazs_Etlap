@@ -2,10 +2,7 @@ package hu.csepel.etlap;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.sql.SQLException;
 
@@ -58,6 +55,10 @@ public class HozzaadasController extends Controller {
             int siker = db.etelHozzaadasa(nev, leiras, kategoria, ar);
             if (siker == 1) {
                 alert("Étel hozzáadása sikeres");
+                inputNev.setText("");
+                inputLeiras.setText("");
+                inputKategoria.setValue("előétel");
+                inputAr.getValueFactory().setValue(1000);
             } else {
                 alert("Étel hozzáadása Sikertelen");
             }

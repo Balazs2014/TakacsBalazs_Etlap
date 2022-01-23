@@ -50,6 +50,9 @@
                <String fx:value="desszert" />
             </FXCollections>
          </items>
+         <value>
+            <String fx:value="előétel"/>
+         </value>
       </ChoiceBox>
       <Spinner fx:id="inputAr" editable="true" prefHeight="12.0" prefWidth="172.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <valueFactory>

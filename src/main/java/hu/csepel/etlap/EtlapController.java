@@ -21,6 +21,10 @@ public class EtlapController extends Controller {
     private TableColumn<Etlap, String> nevCol;
     @FXML
     private TextArea elemLeirasaTextArea;
+    @FXML
+    private Spinner<Integer> inputForintNoveles;
+    @FXML
+    private Spinner<Integer> inputSzazalekNoveles;
 
     private EtlapDb db;
 
@@ -49,10 +53,14 @@ public class EtlapController extends Controller {
             return;
         }
         Etlap torlendoEtel = etlapTableView.getSelectionModel().getSelectedItem();
+        if (!confirm("Biztosan törölni szeretnéd az étlapról:" + torlendoEtel.getNev())) {
+            return;
+        }
         try {
             db.etelTorlese(torlendoEtel.getId());
             alert("Sikeres törlés");
             etlapUjratoltese();
+            elemLeirasaTextArea.setText("");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -60,6 +68,48 @@ public class EtlapController extends Controller {
 
     @FXML
     public void onEmelesForintClick(ActionEvent actionEvent) {
+        int emeles = 0;
+        try {
+            emeles = inputForintNoveles.getValue();
+        } catch (NullPointerException e) {
+            alert("Az emeléshez az ár megadása kötelező");
+            return;
+        } catch (Exception e) {
+            alert("Az ár 50 és 3000 közötti szám lehet");
+            return;
+        }
+        if (emeles < 50 || emeles > 3000) {
+            alert("Az ár 50 és 3000 közötti szám lehet");
+            return;
+        }
+
+        int selectedIndex = etlapTableView.getSelectionModel().getSelectedIndex();
+        Etlap emelesEtel = etlapTableView.getSelectionModel().getSelectedItem();
+
+        if (selectedIndex == -1) {
+            if (!confirm("Biztos szeretné emelni az összes étel árát?")) {
+                return;
+            }
+            try {
+                db.etelEmelesForintOsszes(emeles);
+                alert("Sikeres emelés");
+                etlapUjratoltese();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            if (!confirm("Biztos szeretné emelni a(z) " + emelesEtel.getNev() + " árát?")) {
+                return;
+            }
+            try {
+                db.etelEmelesForint(emelesEtel.getId(), emeles);
+                alert("Sikeres emelés");
+                etlapUjratoltese();
+                elemLeirasaTextArea.setText("");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
@@ -87,11 +137,56 @@ public class EtlapController extends Controller {
 
     @FXML
     public void onEmelesSzazalekClick(ActionEvent actionEvent) {
+        int emeles = 0;
+        try {
+            emeles = inputSzazalekNoveles.getValue();
+        } catch (NullPointerException e) {
+            alert("Az emeléshez a százalék megadása kötelező");
+            return;
+        } catch (Exception e) {
+            alert("Az ár 5 és 50 közötti szám lehet");
+            return;
+        }
+        if (emeles < 5 || emeles > 50) {
+            alert("Az ár 5 és 50 közötti szám lehet");
+            return;
+        }
+
+        int selectedIndex = etlapTableView.getSelectionModel().getSelectedIndex();
+        Etlap emelesEtel = etlapTableView.getSelectionModel().getSelectedItem();
+
+        if (selectedIndex == -1) {
+            if (!confirm("Biztos szeretné emelni az összes étel árát?")) {
+                return;
+            }
+            try {
+                db.etelEmelesSzazalekOsszes(emeles);
+                alert("Sikeres emelés");
+                etlapUjratoltese();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            if (!confirm("Biztos szeretné emelni a(z) " + emelesEtel.getNev() + " árát?")) {
+                return;
+            }
+            try {
+                db.etelEmelesSzazalek(emelesEtel.getId(), emeles);
+                alert("Sikeres emelés");
+                etlapUjratoltese();
+                elemLeirasaTextArea.setText("");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
     public void onEtelClick(MouseEvent event) {
-        Etlap kiirandoLeiras = etlapTableView.getSelectionModel().getSelectedItem();
-        elemLeirasaTextArea.setText(kiirandoLeiras.getLeairas());
+        int selectedIndex = etlapTableView.getSelectionModel().getSelectedIndex();
+        if (!(selectedIndex == -1)) {
+            Etlap kiirandoLeiras = etlapTableView.getSelectionModel().getSelectedItem();
+            elemLeirasaTextArea.setText(kiirandoLeiras.getLeairas());
+        }
     }
 }
