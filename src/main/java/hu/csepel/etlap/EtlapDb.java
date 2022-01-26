@@ -14,14 +14,14 @@ public class EtlapDb {
     public List<Etlap> getEtlap() throws SQLException {
         List<Etlap> etlapok = new ArrayList<>();
         Statement stmt = conn.createStatement();
-        String sql = "SELECT * FROM etlap";
+        String sql = "SELECT * FROM etlap INNER JOIN kategoria ON (etlap.kategoria_id = kategoria.id)";
         ResultSet result = stmt.executeQuery(sql);
         while (result.next()) {
-            int id = result.getInt("id");
-            String nev = result.getString("nev");
-            String leiras = result.getString("leiras");
-            int ar = result.getInt("ar");
-            String kategoria = result.getString("kategoria");
+            int id = result.getInt("etlap.id");
+            String nev = result.getString("etlap.nev");
+            String leiras = result.getString("etlap.leiras");
+            int ar = result.getInt("etlap.ar");
+            String kategoria = result.getString("kategoria.nev");
             Etlap etlap = new Etlap(id, nev, leiras, ar, kategoria);
             etlapok.add(etlap);
         }
@@ -78,5 +78,12 @@ public class EtlapDb {
         stmt.setInt(1, szazalek);
         int erintettSorok = stmt.executeUpdate();
         return erintettSorok == 1;
+    }
+
+    public int kategoriaHozzaadasa(String nev) throws SQLException {
+        String sql = "INSERT INTO kategoria (nev) VALUES (?)";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, nev);
+        return stmt.executeUpdate();
     }
 }

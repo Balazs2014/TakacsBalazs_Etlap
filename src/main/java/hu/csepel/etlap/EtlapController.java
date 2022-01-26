@@ -41,12 +41,10 @@ public class EtlapController extends Controller {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
     }
 
     @FXML
-    public void onTorlesClick(ActionEvent actionEvent) {
+    public void onEtlapTorlesClick(ActionEvent actionEvent) {
         int selectedIndex = etlapTableView.getSelectionModel().getSelectedIndex();
         if (selectedIndex == -1) {
             alert("A törléshez előbb válasszon ki egy elemet a táblázatból");
@@ -188,5 +186,20 @@ public class EtlapController extends Controller {
             Etlap kiirandoLeiras = etlapTableView.getSelectionModel().getSelectedItem();
             elemLeirasaTextArea.setText(kiirandoLeiras.getLeairas());
         }
+    }
+
+    @FXML
+    public void onHozzaadasClick(ActionEvent actionEvent) {
+        try {
+            Controller kategoriaHozzadas = ujAblak("kategoria-hozzaadas-view.fxml", "Kategória hozzáadása", 310, 277);
+            kategoriaHozzadas.getStage().setOnCloseRequest(event -> etlapUjratoltese());
+            kategoriaHozzadas.getStage().show();
+        } catch (Exception e) {
+            e.getMessage();
+        }
+    }
+
+    @FXML
+    public void onKategoriaTorlesClick(ActionEvent actionEvent) {
     }
 }
