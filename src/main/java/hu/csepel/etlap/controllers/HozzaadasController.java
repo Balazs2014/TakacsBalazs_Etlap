@@ -1,5 +1,8 @@
-package hu.csepel.etlap;
+package hu.csepel.etlap.controllers;
 
+import hu.csepel.etlap.Controller;
+import hu.csepel.etlap.EtlapDb;
+import hu.csepel.etlap.Kategoria;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -10,7 +13,7 @@ import java.util.List;
 public class HozzaadasController extends Controller {
 
     @FXML
-    private ChoiceBox inputKategoria;
+    private ChoiceBox<String> inputKategoria;
     @FXML
     private TextArea inputLeiras;
     @FXML

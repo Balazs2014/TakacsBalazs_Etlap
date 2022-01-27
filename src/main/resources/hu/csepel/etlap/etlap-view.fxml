@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -8,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<TabPane xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.csepel.etlap.EtlapController">
+<TabPane xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hu.csepel.etlap.controllers.EtlapController">
    <tabs>
       <Tab closable="false" text="Étlap">
          <content>
@@ -27,6 +28,11 @@
                      <children>
                         <Button mnemonicParsing="false" onAction="#onUjFelveteleClick" prefWidth="100.0" text="Új étel felvétele" />
                         <Button mnemonicParsing="false" onAction="#onEtlapTorlesClick" prefWidth="100.0" text="Törlés" />
+                        <ChoiceBox fx:id="choiceBoxSzures" prefHeight="25.0" prefWidth="174.0">
+                            <value>
+                                <String fx:value="összes" />
+                            </value>
+                        </ChoiceBox>
                      </children>
                   </HBox>
                   <TitledPane animated="false" prefHeight="133.0" prefWidth="395.0" text="Áremelés" GridPane.rowIndex="1">

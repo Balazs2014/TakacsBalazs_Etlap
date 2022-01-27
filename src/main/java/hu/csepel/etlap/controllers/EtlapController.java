@@ -1,5 +1,9 @@
-package hu.csepel.etlap;
+package hu.csepel.etlap.controllers;
 
+import hu.csepel.etlap.Controller;
+import hu.csepel.etlap.Etlap;
+import hu.csepel.etlap.EtlapDb;
+import hu.csepel.etlap.Kategoria;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -26,13 +30,29 @@ public class EtlapController extends Controller {
     @FXML
     private Spinner<Integer> inputSzazalekNoveles;
 
-    private EtlapDb db;
     @FXML
     private TableView<Kategoria> tableViewKategoria;
     @FXML
     private TableColumn<Kategoria, String> masikKategoriaCol;
+    @FXML
+    private ChoiceBox<String> choiceBoxSzures;
+
+    private EtlapDb db;
+    private List<Kategoria> kategoriaLista;
 
     public void initialize() {
+
+        choiceBoxSzures.getItems().add("összes");
+        try {
+            db = new EtlapDb();
+            kategoriaLista = db.getKategoria();
+            for (Kategoria kategoria : kategoriaLista) {
+                choiceBoxSzures.getItems().add(kategoria.getNev());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         nevCol.setCellValueFactory(new PropertyValueFactory<>("nev"));
         kategoriaCol.setCellValueFactory(new PropertyValueFactory<>("kategoria"));
         arCol.setCellValueFactory(new PropertyValueFactory<>("ar"));
@@ -45,6 +65,7 @@ public class EtlapController extends Controller {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        megkotesKivalasztas();
     }
 
     @FXML
@@ -233,5 +254,22 @@ public class EtlapController extends Controller {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    public void megkotesKivalasztas() {
+        choiceBoxSzures.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> {
+            try {
+                if (newValue.equals("összes")) {
+                    etlapUjratoltese();
+                } else {
+                    List<Etlap> szurtEtlapLista = db.getSzurtEtlap(newValue);
+                    etlapTableView.getItems().clear();
+                    for (Etlap etlap : szurtEtlapLista) {
+                        etlapTableView.getItems().add(etlap);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

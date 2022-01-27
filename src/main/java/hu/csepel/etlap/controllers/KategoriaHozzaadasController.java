@@ -1,5 +1,7 @@
-package hu.csepel.etlap;
+package hu.csepel.etlap.controllers;
 
+import hu.csepel.etlap.Controller;
+import hu.csepel.etlap.EtlapDb;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
