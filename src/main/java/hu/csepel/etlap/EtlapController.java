@@ -27,17 +27,21 @@ public class EtlapController extends Controller {
     private Spinner<Integer> inputSzazalekNoveles;
 
     private EtlapDb db;
+    @FXML
+    private TableView<Kategoria> tableViewKategoria;
+    @FXML
+    private TableColumn<Kategoria, String> masikKategoriaCol;
 
     public void initialize() {
         nevCol.setCellValueFactory(new PropertyValueFactory<>("nev"));
         kategoriaCol.setCellValueFactory(new PropertyValueFactory<>("kategoria"));
         arCol.setCellValueFactory(new PropertyValueFactory<>("ar"));
+
+        masikKategoriaCol.setCellValueFactory(new PropertyValueFactory<>("nev"));
         try {
             db = new EtlapDb();
-            List<Etlap> etlapLista = db.getEtlap();
-            for (Etlap etlap : etlapLista) {
-                etlapTableView.getItems().add(etlap);
-            }
+            etlapUjratoltese();
+            kategoriaUjratoltese();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -133,6 +137,18 @@ public class EtlapController extends Controller {
         }
     }
 
+    private void kategoriaUjratoltese() {
+        try {
+            List<Kategoria> kategoriaLista = db.getKategoria();
+            tableViewKategoria.getItems().clear();
+            for (Kategoria kategoria : kategoriaLista) {
+                tableViewKategoria.getItems().add(kategoria);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     public void onEmelesSzazalekClick(ActionEvent actionEvent) {
         int emeles = 0;
@@ -201,5 +217,21 @@ public class EtlapController extends Controller {
 
     @FXML
     public void onKategoriaTorlesClick(ActionEvent actionEvent) {
+        int selectedIndex = tableViewKategoria.getSelectionModel().getSelectedIndex();
+        if (selectedIndex == -1) {
+            alert("A törléshez előbb válasszon ki egy elemet a táblázatból");
+            return;
+        }
+        Kategoria torlendoKategoria = tableViewKategoria.getSelectionModel().getSelectedItem();
+        if (!confirm("Biztosan törölni szeretnéd a kategóriák közül:" + torlendoKategoria.getNev())) {
+            return;
+        }
+        try {
+            db.kategoriaTorlese(torlendoKategoria.getId());
+            alert("Sikeres törlés");
+            kategoriaUjratoltese();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

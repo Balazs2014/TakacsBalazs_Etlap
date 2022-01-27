@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class HozzaadasController extends Controller {
 
@@ -16,6 +17,20 @@ public class HozzaadasController extends Controller {
     private TextField inputNev;
     @FXML
     private Spinner<Integer> inputAr;
+
+    private EtlapDb db;
+
+    public void initialize() {
+        try {
+            db = new EtlapDb();
+            List<Kategoria> kategoriaLista = db.getKategoria();
+            for (Kategoria kategoria : kategoriaLista) {
+                inputKategoria.getItems().add(kategoria.getNev());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     public void onHozzaadClick(ActionEvent actionEvent) {
@@ -36,7 +51,6 @@ public class HozzaadasController extends Controller {
             alert("Kategória kiválasztása kötelező");
             return;
         }
-        String kategoria = inputKategoria.getValue().toString();
         try {
             ar = inputAr.getValue();
         } catch (NullPointerException e) {
@@ -52,7 +66,7 @@ public class HozzaadasController extends Controller {
         }
         try {
             EtlapDb db = new EtlapDb();
-            int siker = db.etelHozzaadasa(nev, leiras, kategoria, ar);
+            int siker = db.etelHozzaadasa(nev, leiras, kategoria_id, ar);
             if (siker == 1) {
                 alert("Étel hozzáadása sikeres");
                 inputNev.setText("");
