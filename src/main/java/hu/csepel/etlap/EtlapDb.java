@@ -50,13 +50,13 @@ public class EtlapDb {
         return erintettSorok == 1;
     }
 
-    public int etelHozzaadasa(String nev, String leiras, int kategoria_id, int ar) throws SQLException {
-        String sql = "INSERT INTO etlap (nev, leiras, kategoria_id, ar) VALUES (?, ?, ?, ?)";
+    public int etelHozzaadasa(String nev, String leiras, int ar, int kategoria_id) throws SQLException {
+        String sql = "INSERT INTO etlap (nev, leiras, ar, kategoria_id) VALUES (?, ?, ?, ?)";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, nev);
         stmt.setString(2, leiras);
-        stmt.setInt(3, kategoria_id);
-        stmt.setInt(4, ar);
+        stmt.setInt(3, ar);
+        stmt.setInt(4, kategoria_id);
         return stmt.executeUpdate();
     }
 
