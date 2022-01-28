@@ -23,7 +23,7 @@ public class KategoriaHozzaadasController extends Controller {
             db = new EtlapDb();
             kategoriaLista = db.getKategoria();
         } catch (SQLException e) {
-            e.printStackTrace();
+            hibaKiir(e);
         }
     }
 
@@ -38,14 +38,15 @@ public class KategoriaHozzaadasController extends Controller {
         try {
             int i = 0;
             int listaHossza = kategoriaLista.size();
-            while (i < listaHossza && !kategoriaLista.get(i).getNev().equals(nev)) {
+            while (i < listaHossza && !kategoriaLista.get(i).getNev().equals(nev.toLowerCase())) {
                 i++;
             }
             if (i < listaHossza) {
                 alert(nev + " már benne van a listában");
+                inputKategoriaTextField.setText("");
             } else {
                 EtlapDb db = new EtlapDb();
-                int siker = db.kategoriaHozzaadasa(nev);
+                int siker = db.kategoriaHozzaadasa(nev.toLowerCase());
                 if (siker == 1) {
                     alert("Kategória hozzáadása sikeres");
                     inputKategoriaTextField.setText("");
@@ -54,7 +55,7 @@ public class KategoriaHozzaadasController extends Controller {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            hibaKiir(e);
         }
     }
 }

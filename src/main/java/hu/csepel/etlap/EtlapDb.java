@@ -46,19 +46,6 @@ public class EtlapDb {
         return etlapok;
     }
 
-    public List<Kategoria> getKategoria() throws SQLException {
-        List<Kategoria> kategoriak = new ArrayList<>();
-        Statement stmt = conn.createStatement();
-        String sql = "SELECT * FROM kategoria";
-        ResultSet result = stmt.executeQuery(sql);
-        while (result.next()) {
-            int id = result.getInt("id");
-            String nev = result.getString("nev");
-            Kategoria kategoria = new Kategoria(id, nev);
-            kategoriak.add(kategoria);
-        }
-        return kategoriak;
-    }
 
     public boolean etelTorlese(int id) throws SQLException {
         String sql = "DELETE FROM etlap WHERE id = ?";
@@ -110,6 +97,20 @@ public class EtlapDb {
         stmt.setInt(1, szazalek);
         int erintettSorok = stmt.executeUpdate();
         return erintettSorok == 1;
+    }
+
+    public List<Kategoria> getKategoria() throws SQLException {
+        List<Kategoria> kategoriak = new ArrayList<>();
+        Statement stmt = conn.createStatement();
+        String sql = "SELECT * FROM kategoria";
+        ResultSet result = stmt.executeQuery(sql);
+        while (result.next()) {
+            int id = result.getInt("id");
+            String nev = result.getString("nev");
+            Kategoria kategoria = new Kategoria(id, nev);
+            kategoriak.add(kategoria);
+        }
+        return kategoriak;
     }
 
     public int kategoriaHozzaadasa(String nev) throws SQLException {

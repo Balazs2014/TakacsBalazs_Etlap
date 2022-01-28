@@ -32,7 +32,7 @@ public class HozzaadasController extends Controller {
                 inputKategoria.getItems().add(kategoria.getNev());
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            hibaKiir(e);
         }
     }
 
@@ -91,7 +91,7 @@ public class HozzaadasController extends Controller {
                 alert("Étel hozzáadása Sikertelen");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            hibaKiir(e);
         }
     }
 }

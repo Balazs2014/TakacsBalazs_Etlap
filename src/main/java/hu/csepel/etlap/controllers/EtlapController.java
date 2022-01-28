@@ -29,7 +29,6 @@ public class EtlapController extends Controller {
     private Spinner<Integer> inputForintNoveles;
     @FXML
     private Spinner<Integer> inputSzazalekNoveles;
-
     @FXML
     private TableView<Kategoria> tableViewKategoria;
     @FXML
@@ -41,7 +40,6 @@ public class EtlapController extends Controller {
     private List<Kategoria> kategoriaLista;
 
     public void initialize() {
-
         choiceBoxSzures.getItems().add("összes");
         try {
             db = new EtlapDb();
@@ -50,7 +48,7 @@ public class EtlapController extends Controller {
                 choiceBoxSzures.getItems().add(kategoria.getNev());
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            hibaKiir(e);
         }
 
         nevCol.setCellValueFactory(new PropertyValueFactory<>("nev"));
@@ -63,9 +61,20 @@ public class EtlapController extends Controller {
             etlapUjratoltese();
             kategoriaUjratoltese();
         } catch (SQLException e) {
-            e.printStackTrace();
+            hibaKiir(e);
         }
         megkotesKivalasztas();
+    }
+
+    @FXML
+    public void onUjFelveteleClick(ActionEvent actionEvent) {
+        try {
+            Controller hozzadas = ujAblak("hozzaadas-view.fxml", "Étel hozzáadása", 310, 277);
+            hozzadas.getStage().setOnCloseRequest(event -> etlapUjratoltese());
+            hozzadas.getStage().show();
+        } catch (Exception e) {
+            hibaKiir(e);
+        }
     }
 
     @FXML
@@ -85,7 +94,7 @@ public class EtlapController extends Controller {
             etlapUjratoltese();
             elemLeirasaTextArea.setText("");
         } catch (SQLException e) {
-            e.printStackTrace();
+            hibaKiir(e);
         }
     }
 
@@ -114,59 +123,29 @@ public class EtlapController extends Controller {
                 return;
             }
             try {
-                db.etelEmelesForintOsszes(emeles);
-                alert("Sikeres emelés");
-                etlapUjratoltese();
+                if (db.etelEmelesForintOsszes(emeles)) {
+                    alertWait("Sikeres emelés");
+                    etlapUjratoltese();
+                }
             } catch (SQLException e) {
-                e.printStackTrace();
+                hibaKiir(e);
             }
         } else {
             if (!confirm("Biztos szeretné emelni a(z) " + emelesEtel.getNev() + " árát?")) {
                 return;
             }
             try {
-                db.etelEmelesForint(emelesEtel.getId(), emeles);
-                alert("Sikeres emelés");
-                etlapUjratoltese();
-                elemLeirasaTextArea.setText("");
+                if (db.etelEmelesForint(emelesEtel.getId(), emeles)) {
+                    alertWait("Sikeres emelés");
+                    etlapUjratoltese();
+                    elemLeirasaTextArea.setText("");
+                } else {
+                    alert("Sikertelen emelés");
+                }
+
             } catch (SQLException e) {
-                e.printStackTrace();
+                hibaKiir(e);
             }
-        }
-    }
-
-    @FXML
-    public void onUjFelveteleClick(ActionEvent actionEvent) {
-        try {
-            Controller hozzadas = ujAblak("hozzaadas-view.fxml", "Étel hozzáadása", 310, 277);
-            hozzadas.getStage().setOnCloseRequest(event -> etlapUjratoltese());
-            hozzadas.getStage().show();
-        } catch (Exception e) {
-            e.getMessage();
-        }
-    }
-
-    private void etlapUjratoltese() {
-        try {
-            List<Etlap> etlapLista = db.getEtlap();
-            etlapTableView.getItems().clear();
-            for (Etlap etlap : etlapLista) {
-                etlapTableView.getItems().add(etlap);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void kategoriaUjratoltese() {
-        try {
-            List<Kategoria> kategoriaLista = db.getKategoria();
-            tableViewKategoria.getItems().clear();
-            for (Kategoria kategoria : kategoriaLista) {
-                tableViewKategoria.getItems().add(kategoria);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -195,23 +174,29 @@ public class EtlapController extends Controller {
                 return;
             }
             try {
-                db.etelEmelesSzazalekOsszes(emeles);
-                alert("Sikeres emelés");
-                etlapUjratoltese();
+                if (db.etelEmelesSzazalekOsszes(emeles)){
+                    alertWait("Sikeres emelés");
+                    etlapUjratoltese();
+                } else {
+                    alert("Sikertelen emelés");
+                }
             } catch (SQLException e) {
-                e.printStackTrace();
+                hibaKiir(e);
             }
         } else {
             if (!confirm("Biztos szeretné emelni a(z) " + emelesEtel.getNev() + " árát?")) {
                 return;
             }
             try {
-                db.etelEmelesSzazalek(emelesEtel.getId(), emeles);
-                alert("Sikeres emelés");
-                etlapUjratoltese();
-                elemLeirasaTextArea.setText("");
+                if (db.etelEmelesSzazalek(emelesEtel.getId(), emeles)) {
+                    alertWait("Sikeres emelés");
+                    etlapUjratoltese();
+                    elemLeirasaTextArea.setText("");
+                } else {
+                    alert("Sikertelen emelés");
+                }
             } catch (SQLException e) {
-                e.printStackTrace();
+                hibaKiir(e);
             }
         }
     }
@@ -225,36 +210,6 @@ public class EtlapController extends Controller {
         }
     }
 
-    @FXML
-    public void onHozzaadasClick(ActionEvent actionEvent) {
-        try {
-            Controller kategoriaHozzadas = ujAblak("kategoria-hozzaadas-view.fxml", "Kategória hozzáadása", 310, 277);
-            kategoriaHozzadas.getStage().setOnCloseRequest(event -> kategoriaUjratoltese());
-            kategoriaHozzadas.getStage().show();
-        } catch (Exception e) {
-            e.getMessage();
-        }
-    }
-
-    @FXML
-    public void onKategoriaTorlesClick(ActionEvent actionEvent) {
-        int selectedIndex = tableViewKategoria.getSelectionModel().getSelectedIndex();
-        if (selectedIndex == -1) {
-            alert("A törléshez előbb válasszon ki egy elemet a táblázatból");
-            return;
-        }
-        Kategoria torlendoKategoria = tableViewKategoria.getSelectionModel().getSelectedItem();
-        if (!confirm("Biztosan törölni szeretnéd a kategóriák közül:" + torlendoKategoria.getNev())) {
-            return;
-        }
-        try {
-            db.kategoriaTorlese(torlendoKategoria.getId());
-            alert("Sikeres törlés");
-            kategoriaUjratoltese();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
     public void megkotesKivalasztas() {
         choiceBoxSzures.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> {
             try {
@@ -268,8 +223,63 @@ public class EtlapController extends Controller {
                     }
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                hibaKiir(e);
             }
         });
+    }
+
+    private void etlapUjratoltese() {
+        try {
+            List<Etlap> etlapLista = db.getEtlap();
+            etlapTableView.getItems().clear();
+            for (Etlap etlap : etlapLista) {
+                etlapTableView.getItems().add(etlap);
+            }
+        } catch (SQLException e) {
+            hibaKiir(e);
+        }
+    }
+
+    @FXML
+    public void onHozzaadasClick(ActionEvent actionEvent) {
+        try {
+            Controller kategoriaHozzadas = ujAblak("kategoria-hozzaadas-view.fxml", "Kategória hozzáadása", 310, 277);
+            kategoriaHozzadas.getStage().setOnCloseRequest(event -> kategoriaUjratoltese());
+            kategoriaHozzadas.getStage().show();
+        } catch (Exception e) {
+            hibaKiir(e);
+        }
+    }
+
+    @FXML
+    public void onKategoriaTorlesClick(ActionEvent actionEvent) {
+        int selectedIndex = tableViewKategoria.getSelectionModel().getSelectedIndex();
+        if (selectedIndex == -1) {
+            alert("A törléshez előbb válasszon ki egy elemet a táblázatból");
+            return;
+        }
+        Kategoria torlendoKategoria = tableViewKategoria.getSelectionModel().getSelectedItem();
+        if (!confirm("Biztosan törölni szeretnéd a kategóriák közül: " + torlendoKategoria.getNev())) {
+            return;
+        }
+        try {
+            db.kategoriaTorlese(torlendoKategoria.getId());
+            alert("Sikeres törlés");
+            kategoriaUjratoltese();
+        } catch (SQLException e) {
+            hibaKiir(e);
+        }
+    }
+
+    private void kategoriaUjratoltese() {
+        try {
+            List<Kategoria> kategoriaLista = db.getKategoria();
+            tableViewKategoria.getItems().clear();
+            for (Kategoria kategoria : kategoriaLista) {
+                tableViewKategoria.getItems().add(kategoria);
+            }
+        } catch (SQLException e) {
+            hibaKiir(e);
+        }
     }
 }
