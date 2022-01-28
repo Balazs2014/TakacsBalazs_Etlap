@@ -229,7 +229,7 @@ public class EtlapController extends Controller {
     public void onHozzaadasClick(ActionEvent actionEvent) {
         try {
             Controller kategoriaHozzadas = ujAblak("kategoria-hozzaadas-view.fxml", "Kategória hozzáadása", 310, 277);
-            kategoriaHozzadas.getStage().setOnCloseRequest(event -> etlapUjratoltese());
+            kategoriaHozzadas.getStage().setOnCloseRequest(event -> kategoriaUjratoltese());
             kategoriaHozzadas.getStage().show();
         } catch (Exception e) {
             e.getMessage();
